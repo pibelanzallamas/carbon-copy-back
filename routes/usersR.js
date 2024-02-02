@@ -41,8 +41,7 @@ users.post("/login", (req, res) => {
     .catch((err) => res.send(err));
 });
 
-//devuelve 1 user
-//         ?
+//devuelve 1 usuario
 users.get("/:id", (req, res) => {
   const { id } = req.params;
 

@@ -2,6 +2,7 @@ const express = require("express");
 const favorites = express.Router();
 const { Favorites, Styles } = require("../models");
 
+//guardar un favorito
 favorites.post("/register", (req, res) => {
   const { uid, sid } = req.body;
 
@@ -10,16 +11,16 @@ favorites.post("/register", (req, res) => {
     .catch((err) => res.send(err));
 });
 
-//check 1 fav
-favorites.get("/find", (req, res) => {
-  const { uid, sid } = req.query;
+//check si esta en favorito
+favorites.get("/", (req, res) => {
+  const { uid, sid } = req.body;
 
-  Favorites.findOne({ where: { sid, uid } })
+  Favorites.findOne({ where: { uid, sid } })
     .then((fav) => res.send(fav))
     .catch((err) => res.send(err));
 });
 
-//1 user favs
+//los favs de 1 usuario
 favorites.get("/:uid", (req, res) => {
   const { uid } = req.params;
 
@@ -33,7 +34,7 @@ favorites.get("/:uid", (req, res) => {
 });
 
 //dislike
-favorites.delete("/delete", (req, res) => {
+favorites.delete("/", (req, res) => {
   const { uid, sid } = req.body;
 
   Favorites.destroy({ where: { uid, sid } })

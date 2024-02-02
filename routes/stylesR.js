@@ -1,7 +1,8 @@
 const express = require("express");
 const styles = express.Router();
-const { Styles, Users } = require("../models");
+const { Styles } = require("../models");
 
+//guardar un style
 styles.post("/register", (req, res) => {
   const { style } = req.body;
 
@@ -10,35 +11,14 @@ styles.post("/register", (req, res) => {
     .catch((err) => res.send(err));
 });
 
-//devolver todos los estilos
+//devolver todos los styles
 styles.get("/", (req, res) => {
   Styles.findAll()
     .then((all) => res.send(all))
     .catch((err) => res.send(err));
 });
 
-//de acuerdo a una prop
-styles.get("/:pid", (req, res) => {
-  const { pid } = req.params;
-
-  Styles.findAll({
-    where: { pid },
-    include: Users,
-    order: [["id", "DESC"]],
-  })
-    .then((rev) => res.send(rev))
-    .catch((err) => res.send(err));
-});
-
-//de acuerdo a un user
-styles.get("/users/:uid", (req, res) => {
-  const { uid } = req.params;
-
-  Styles.findAll({ where: { uid }, include: Properties })
-    .then((all) => res.send(all))
-    .catch((err) => res.send(err));
-});
-
+//borrar un style
 styles.delete("/:id", (req, res) => {
   const { id } = req.params;
 
