@@ -41,7 +41,7 @@ users.post("/login", (req, res) => {
     .catch((err) => res.send(err));
 });
 
-//devuelve 1 usuario
+//devuelve 1 user
 users.get("/:id", (req, res) => {
   const { id } = req.params;
 
@@ -50,6 +50,7 @@ users.get("/:id", (req, res) => {
     .catch((err) => res.send(err).status(400));
 });
 
+//te chequea las cookies
 users.post("/me", (req, res) => {
   const token = req.cookies.token;
   if (!token) return res.sendStatus(401);
@@ -58,6 +59,7 @@ users.post("/me", (req, res) => {
   res.send(payload);
 });
 
+//te limpia las cookies
 users.post("/logout", (req, res) => {
   res.clearCookie("token");
   res.sendStatus(204);
