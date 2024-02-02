@@ -3,17 +3,14 @@ const styles = express.Router();
 const { Styles, Users } = require("../models");
 
 styles.post("/register", (req, res) => {
-  const { uid, pid, rating, review } = req.body;
+  const { style } = req.body;
 
-  Styles.findOrCreate({
-    where: { uid, pid },
-    defaults: { rating, review },
-  })
-    .then((rew) => res.send(rew))
+  Styles.findOrCreate({ where: { style } })
+    .then((sty) => res.send(sty))
     .catch((err) => res.send(err));
 });
 
-//todas
+//devolver todos los estilos
 styles.get("/", (req, res) => {
   Styles.findAll()
     .then((all) => res.send(all))

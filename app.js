@@ -7,10 +7,12 @@ const routes = require("./routes");
 const models = require("./models");
 
 app.use(cookieParser());
+app.use(cors());
 app.use(express.json());
 app.use("/api", routes);
 
 app.use("/api", (req, res) => {
+  console.log("entro al error!s");
   res.sendStatus(404);
 });
 

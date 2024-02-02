@@ -9,10 +9,7 @@ users.post("/register", (req, res) => {
 
   Users.findOrCreate({
     where: { email },
-    defaults: {
-      name,
-      password,
-    },
+    defaults: { name, password },
   })
     .then((user) => res.send(user).status(200))
     .catch((err) => res.send(err).status(400));

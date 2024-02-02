@@ -2,17 +2,12 @@ const express = require("express");
 const favorites = express.Router();
 const { Favorites, Styles } = require("../models");
 
-//like
 favorites.post("/register", (req, res) => {
-  const { uid, sid } = req.body.data;
+  const { uid, sid } = req.body;
 
-  Favorites.findOrCreate({
-    where: { uid, sid },
-  })
-    .then((add) => {
-      res.send(add[1]);
-    })
-    .catch((err) => res.send(err[1]));
+  Favorites.findOrCreate({ where: { uid, sid } })
+    .then((fav) => res.send(fav))
+    .catch((err) => res.send(err));
 });
 
 //check 1 fav
