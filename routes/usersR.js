@@ -85,19 +85,33 @@ users.post("/confirm/:email", (req, res) => {
 });
 
 users.post("/forgot/:email", (req, res) => {
+  function randomnaizer() {
+    let caracteresPermitidos = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let cadenaRandom = "";
+    for (let i = 0; i < 5; i++) {
+      let indiceAleatorio = Math.floor(
+        Math.random() * caracteresPermitidos.length
+      );
+      cadenaRandom += caracteresPermitidos.charAt(indiceAleatorio);
+    }
+    return cadenaRandom;
+  }
+
   const { email } = req.params;
+  const codigo = randomnaizer();
 
   const mailOptions = {
     from: "brandoncastillo.09@gmail.com",
     to: email,
-    subject: "Cancelación de Cita - House of Dev",
-    html: `<h1 style="color: blue;"> Su cita ha sido!</h1> <p> Usted o el propietario ha cancelado la cita. Para más información ingrese al sitio web. </p>
-  </p> <p>Saludos!</p>`,
+    subject: "Codigo de recuperación - Carbon Copy",
+    html: `<h1 style="color: blue;"> Código de Recuperación!</h1> 
+    <p> Usted ha pedido un código de recuperación para su contraseña, su nueva contraseña es: ${codigo}</p>
+    <p>Gracias, - Carbon Copy.</p>`,
   };
 
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) res.send(err);
-    else res.send(info);
+    else res.send(codigo).status(200);
   });
 });
 
