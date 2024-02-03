@@ -84,7 +84,19 @@ users.post("/confirm/:email", (req, res) => {
   });
 });
 
+//manda mail con nueva contraseña
 users.post("/forgot/:email", (req, res) => {
+  const { email } = req.params;
+  let id = 1;
+
+  Users.findOne({ where: { email } })
+    .then((one) => {
+      id = one.dataValues.id;
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+
   function randomnaizer() {
     let caracteresPermitidos = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let cadenaRandom = "";
@@ -97,7 +109,6 @@ users.post("/forgot/:email", (req, res) => {
     return cadenaRandom;
   }
 
-  const { email } = req.params;
   const codigo = randomnaizer();
 
   const mailOptions = {
@@ -105,14 +116,28 @@ users.post("/forgot/:email", (req, res) => {
     to: email,
     subject: "Codigo de recuperación - Carbon Copy",
     html: `<h1 style="color: blue;"> Código de Recuperación!</h1> 
-    <p> Usted ha pedido un código de recuperación para su contraseña, su nueva contraseña es: ${codigo}</p>
+    <p> Usted ha pedido un código de recuperación para su contraseña, 
+    su nueva contraseña es: ${codigo}</p>
     <p>Gracias, - Carbon Copy.</p>`,
   };
 
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) res.send(err);
-    else res.send(codigo).status(200);
+    else res.send([codigo, id]).status(200);
   });
+});
+
+//modificar user
+users.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const { name, password, email } = req.body;
+
+  Users.update(
+    { name, password, email },
+    { where: { id }, individualHooks: true }
+  )
+    .then((user) => res.send(user))
+    .catch((err) => res.send(err));
 });
 
 module.exports = users;
