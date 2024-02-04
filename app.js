@@ -1,4 +1,5 @@
 const express = require("express");
+const dotenv = require("dotenv");
 const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -6,13 +7,13 @@ const db = require("./config/db");
 const routes = require("./routes");
 const models = require("./models");
 
+dotenv.config();
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api", routes);
 
 app.use("/api", (req, res) => {
-  console.log("entro aca");
   res.sendStatus(404);
 });
 

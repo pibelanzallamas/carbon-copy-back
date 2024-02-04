@@ -28,7 +28,6 @@ users.post("/login", (req, res) => {
         const payload = {
           id: user.id,
           name: user.name,
-          lastname: user.lastname,
           email: user.email,
         };
 
@@ -112,7 +111,7 @@ users.post("/forgot/:email", (req, res) => {
   const codigo = randomnaizer();
 
   const mailOptions = {
-    from: "brandoncastillo.09@gmail.com",
+    from: process.env.EMAIL,
     to: email,
     subject: "Codigo de recuperación - Carbon Copy",
     html: `<h1 style="color: blue;"> Código de Recuperación!</h1> 
