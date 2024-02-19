@@ -5,12 +5,15 @@ class Styles extends Model {}
 
 Styles.init(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
     style: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    format: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    color: {
       type: DataTypes.STRING,
       allowNull: false,
     },
