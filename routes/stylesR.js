@@ -4,17 +4,19 @@ const { Styles } = require("../models");
 
 //guardar un style
 styles.post("/register", (req, res) => {
-  const { style } = req.body;
+  const { theme, mode, color } = req.body;
 
-  Styles.findOrCreate({ where: { style } })
+  Styles.findOrCreate({ where: { style: theme, format: mode, color } })
     .then((sty) => res.send(sty))
     .catch((err) => res.send(err));
 });
 
-//devolver todos los styles
+//encontrar un estillo
 styles.get("/", (req, res) => {
-  Styles.findAll()
-    .then((all) => res.send(all))
+  const { theme, mode, color } = req.query;
+
+  Styles.findOne({ where: { style: theme, format: mode, color } })
+    .then((ok) => res.send(ok))
     .catch((err) => res.send(err));
 });
 

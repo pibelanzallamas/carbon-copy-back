@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const users = require("./usersR");
 const styles = require("./stylesR");
 const favorites = require("./favoritesR");

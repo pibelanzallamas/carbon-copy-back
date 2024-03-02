@@ -35,7 +35,7 @@ favorites.get("/:uid", (req, res) => {
 
 //dislike
 favorites.delete("/", (req, res) => {
-  const { uid, sid } = req.body;
+  const { uid, sid } = req.query;
 
   Favorites.destroy({ where: { uid, sid } })
     .then((add) => {
