@@ -3,6 +3,7 @@ const users = express.Router();
 const { Users } = require("../models");
 const { generateToken, validateToken } = require("../config/tokens.js");
 const transporter = require("../utils/mail");
+const dotenv = require("dotenv");
 
 users.post("/register", (req, res) => {
   const { name, email, password } = req.body;
@@ -63,6 +64,7 @@ users.post("/logout", (req, res) => {
   res.sendStatus(204);
 });
 
+//confirmar email (?
 users.post("/confirm/:email", (req, res) => {
   const { email } = req.params;
 
@@ -84,50 +86,43 @@ users.post("/confirm/:email", (req, res) => {
 
 //manda mail con nueva contraseña
 users.post("/forgot/:email", (req, res) => {
+  dotenv.config();
   const { email } = req.params;
   let id;
 
   Users.findOne({ where: { email } })
     .then((data) => {
       id = data.dataValues.id;
+
+      function randomnaizer() {
+        let caracteresPermitidos = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let cadenaRandom = "";
+        for (let i = 0; i < 5; i++) {
+          let indiceAleatorio = Math.floor(
+            Math.random() * caracteresPermitidos.length
+          );
+          cadenaRandom += caracteresPermitidos.charAt(indiceAleatorio);
+        }
+        return cadenaRandom;
+      }
+      const codigo = randomnaizer();
+
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Codigo de recuperación - Carbon Copy",
+        html: `<h1 style="color: blue;"> Código de Recuperación!</h1>
+        <p> Usted ha pedido un código de recuperación para su contraseña,
+        su nueva contraseña es: ${codigo}</p>
+        <p>Gracias, - Carbon Copy.</p>`,
+      };
+
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) res.send(err);
+        else res.send([id, codigo]);
+      });
     })
-    .catch((err) => {
-      console.log("err");
-      console.log(err);
-      res.send(err);
-    });
-
-  function randomnaizer() {
-    let caracteresPermitidos = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let cadenaRandom = "";
-    for (let i = 0; i < 5; i++) {
-      let indiceAleatorio = Math.floor(
-        Math.random() * caracteresPermitidos.length
-      );
-      cadenaRandom += caracteresPermitidos.charAt(indiceAleatorio);
-    }
-    return cadenaRandom;
-  }
-
-  const codigo = randomnaizer();
-
-  const mailOptions = {
-    from: process.env.EMAIL,
-    to: email,
-    subject: "Codigo de recuperación - Carbon Copy",
-    html: `<h1 style="color: blue;"> Código de Recuperación!</h1>
-    <p> Usted ha pedido un código de recuperación para su contraseña,
-    su nueva contraseña es: ${codigo}</p>
-    <p>Gracias, - Carbon Copy.</p>`,
-  };
-
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send([id, codigo]);
-    }
-  });
+    .catch((err) => res.send(err));
 });
 
 //modificar user
