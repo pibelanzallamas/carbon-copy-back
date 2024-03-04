@@ -128,9 +128,12 @@ users.post("/forgot/:email", (req, res) => {
 //modificar user
 users.put("/:id", (req, res) => {
   const { id } = req.params;
-  const { password } = req.body;
+  const { email, name, password } = req.body;
 
-  Users.update({ password }, { where: { id }, individualHooks: true })
+  Users.update(
+    { password, email, name },
+    { where: { id }, individualHooks: true }
+  )
     .then((user) => res.send(user))
     .catch((err) => res.send(err));
 });
