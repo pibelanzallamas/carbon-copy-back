@@ -125,17 +125,34 @@ users.post("/forgot/:email", (req, res) => {
     .catch((err) => res.send(err));
 });
 
-//modificar user
-users.put("/:id", (req, res) => {
+//mod user con pass
+users.put("/pass/:id", (req, res) => {
   const { id } = req.params;
   const { email, name, password } = req.body;
 
   Users.update(
-    { password, email, name },
+    { email, name, password },
     { where: { id }, individualHooks: true }
   )
-    .then((user) => res.send(user))
+    .then((user) => {
+      res.send(user);
+      console.log(password, "pass con pass");
+    })
     .catch((err) => res.send(err));
+});
+
+//mod user sin pass
+users.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const { email, name } = req.body;
+
+  Users.update({ email, name }, { where: { id }, individualHooks: true })
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
 });
 
 module.exports = users;

@@ -48,12 +48,14 @@ Users.beforeCreate((user) => {
 });
 
 Users.beforeUpdate((user) => {
-  const salt = bcrypt.genSaltSync(8);
-  user.salt = salt;
+  if (user.changed("password")) {
+    const salt = bcrypt.genSaltSync(8);
+    user.salt = salt;
 
-  return user.hash(user.password, user.salt).then((hash) => {
-    user.password = hash;
-  });
+    return user.hash(user.password, user.salt).then((hash) => {
+      user.password = hash;
+    });
+  }
 });
 
 module.exports = Users;
