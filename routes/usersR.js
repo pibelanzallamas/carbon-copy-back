@@ -64,26 +64,6 @@ users.post("/logout", (req, res) => {
   res.sendStatus(204);
 });
 
-//confirmar email (?
-users.post("/confirm/:email", (req, res) => {
-  const { email } = req.params;
-
-  const mailOptions = {
-    from: "brandoncastillo.09@gmail.com",
-    to: email,
-    subject: "Registro Carbon Copy",
-    html: `<h1 style="color: blue;"> Confirme su registro en Carbon Copy</h1>
-    <p>Ingrese a este link para confirmar su email! <a href='https://www.google.com.ar' target='_blank'> link! </></p> 
-    <p>Gracias por registarse! 📝</p>
-   <p>Saludos 👋</p>`,
-  };
-
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) res.send(err);
-    else res.send(info);
-  });
-});
-
 //manda mail con nueva contraseña
 users.post("/forgot/:email", (req, res) => {
   dotenv.config();
