@@ -2,7 +2,7 @@ const express = require("express");
 const styles = express.Router();
 const { Styles } = require("../models");
 
-//guardar un style
+//guardar un estilo
 styles.post("/register", (req, res) => {
   const { theme, mode, color } = req.body;
 
@@ -11,7 +11,7 @@ styles.post("/register", (req, res) => {
     .catch((err) => res.send(err));
 });
 
-//encontrar un estillo
+//encontrar un estilo
 styles.get("/", (req, res) => {
   const { theme, mode, color } = req.query;
 
@@ -20,7 +20,7 @@ styles.get("/", (req, res) => {
     .catch((err) => res.send(err));
 });
 
-//borrar un style
+//borrar un estilo
 styles.delete("/:id", (req, res) => {
   const { id } = req.params;
 

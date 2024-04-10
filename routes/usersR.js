@@ -5,6 +5,7 @@ const { generateToken, validateToken } = require("../config/tokens.js");
 const transporter = require("../utils/mail");
 const dotenv = require("dotenv");
 
+//registrarse
 users.post("/register", (req, res) => {
   const { name, email, password } = req.body;
 
@@ -16,6 +17,16 @@ users.post("/register", (req, res) => {
     .catch((err) => res.send(err).status(400));
 });
 
+//che cookie
+users.post("/me", (req, res) => {
+  const token = req.body.token;
+  if (!token) return res.sendStatus(401);
+  const { payload } = validateToken(token);
+  if (!payload) return res.sendStatus(401);
+  res.send(payload);
+});
+
+//loguearse
 users.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -32,14 +43,15 @@ users.post("/login", (req, res) => {
           email: user.email,
         };
 
-        res.cookie("token", "otto");
+        const token = generateToken(payload);
 
-        res.send(payload);
+        res.send({ payload, token });
       });
     })
     .catch((err) => res.send(err));
 });
 
+//buscar un usuario x id
 users.get("/:id", (req, res) => {
   const { id } = req.params;
 
@@ -48,6 +60,7 @@ users.get("/:id", (req, res) => {
     .catch((err) => res.send(err).status(400));
 });
 
+//mandar codigo via email
 users.post("/forgot/:email", (req, res) => {
   dotenv.config();
   const { email } = req.params;
@@ -88,6 +101,7 @@ users.post("/forgot/:email", (req, res) => {
     .catch((err) => res.send(err));
 });
 
+//mod user con pass
 users.put("/pass/:id", (req, res) => {
   const { id } = req.params;
   const { email, name, password } = req.body;
@@ -103,6 +117,7 @@ users.put("/pass/:id", (req, res) => {
     .catch((err) => res.send(err));
 });
 
+//mod user sin pass
 users.put("/:id", (req, res) => {
   const { id } = req.params;
   const { email, name } = req.body;
@@ -114,19 +129,6 @@ users.put("/:id", (req, res) => {
     .catch((err) => {
       res.send(err);
     });
-});
-
-users.get("/codigo-imagen", async (req, res) => {
-  console.log("entro a la ruta correcta");
-  const codigo = req.query.codigo;
-  console.log("codigo recibido", codigo);
-  const html = `<pre>${codigo}</pre>`; // Crea un HTML con el código
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.setContent(html);
-  const imageBuffer = await page.screenshot();
-  await browser.close();
-  res.contentType("image/png").send(imageBuffer);
 });
 
 module.exports = users;
