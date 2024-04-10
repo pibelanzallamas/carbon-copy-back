@@ -8,8 +8,8 @@ const routes = require("./routes");
 const models = require("./models");
 
 dotenv.config();
-app.use(cors());
 app.use(cookieParser());
+app.use(cors());
 app.use(express.json());
 app.use("/api", routes);
 

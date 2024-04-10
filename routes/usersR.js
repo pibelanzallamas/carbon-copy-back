@@ -32,15 +32,14 @@ users.post("/login", (req, res) => {
           email: user.email,
         };
 
-        const token = generateToken(payload);
-        res.cookie("token", token);
+        res.cookie("token", "otto");
+
         res.send(payload);
       });
     })
     .catch((err) => res.send(err));
 });
 
-//devuelve 1 user
 users.get("/:id", (req, res) => {
   const { id } = req.params;
 
@@ -49,22 +48,6 @@ users.get("/:id", (req, res) => {
     .catch((err) => res.send(err).status(400));
 });
 
-//te chequea las cookies
-users.post("/me", (req, res) => {
-  const token = req.cookies.token;
-  if (!token) return res.sendStatus(401);
-  const { payload } = validateToken(token);
-  if (!payload) return res.sendStatus(401);
-  res.send(payload);
-});
-
-//te limpia las cookies
-users.post("/logout", (req, res) => {
-  res.clearCookie("token");
-  res.sendStatus(204);
-});
-
-//manda mail con nueva contraseña
 users.post("/forgot/:email", (req, res) => {
   dotenv.config();
   const { email } = req.params;
@@ -105,7 +88,6 @@ users.post("/forgot/:email", (req, res) => {
     .catch((err) => res.send(err));
 });
 
-//mod user con pass
 users.put("/pass/:id", (req, res) => {
   const { id } = req.params;
   const { email, name, password } = req.body;
@@ -121,7 +103,6 @@ users.put("/pass/:id", (req, res) => {
     .catch((err) => res.send(err));
 });
 
-//mod user sin pass
 users.put("/:id", (req, res) => {
   const { id } = req.params;
   const { email, name } = req.body;
@@ -133,6 +114,19 @@ users.put("/:id", (req, res) => {
     .catch((err) => {
       res.send(err);
     });
+});
+
+users.get("/codigo-imagen", async (req, res) => {
+  console.log("entro a la ruta correcta");
+  const codigo = req.query.codigo;
+  console.log("codigo recibido", codigo);
+  const html = `<pre>${codigo}</pre>`; // Crea un HTML con el código
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setContent(html);
+  const imageBuffer = await page.screenshot();
+  await browser.close();
+  res.contentType("image/png").send(imageBuffer);
 });
 
 module.exports = users;
