@@ -7,13 +7,13 @@ const db = require("./config/db");
 const routes = require("./routes");
 const models = require("./models");
 
-app.use(
-  cors({
-    origin: "http://carbon-copy-omega.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://carbon-copy-omega.vercel.app",
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//     credentials: true,
+//   })
+// );
 
 app.use(cors());
 app.use(cookieParser());
