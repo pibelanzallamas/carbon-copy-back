@@ -1,13 +1,18 @@
-const Sequelize = require("sequelize");
+require("dotenv").config();
+const { Sequelize } = require("sequelize");
 
 const db = new Sequelize(
-  "ujhgttgs",
-  "ujhgttgs",
-  "uiM3it79Fa3gfR4P-2x-zAS_ts30L2hN",
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    host: "isilo.db.elephantsql.com",
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     dialect: "postgres",
     logging: false,
+    dialectOptions: {
+      ssl: { require: true, rejectUnauthorized: false },
+    },
     timezone: "-03:00",
   }
 );
