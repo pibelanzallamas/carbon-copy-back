@@ -1,5 +1,4 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -7,11 +6,17 @@ const db = require("./config/db");
 const routes = require("./routes");
 const models = require("./models");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://carbon-copy-omega.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  })
+);
+
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api", routes);
-dotenv.config();
 
 app.use("/api", (req, res) => {
   res.sendStatus(404);
